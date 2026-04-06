@@ -3,6 +3,7 @@ import { toArray } from '@rc-component/util';
 import type { SelectProps } from 'antd';
 import { ConfigProvider, Input, Select } from 'antd';
 import { clsx } from 'clsx';
+import { isArray, isBoolean, isObject } from 'lodash-es';
 import React, { useContext, useMemo, useState } from 'react';
 import { FieldLabel, useStyle } from '../../../../utils';
 import type { ProFieldLightProps } from '../../../PureProField';
@@ -47,6 +48,20 @@ const getValueOrLabel = (
   return valueMap[v?.value] || v.label;
 };
 
+const optionMatchesFilterProp = (
+  option: Record<string, any>,
+  optionFilterProp: string | string[],
+  keyword: string,
+) => {
+  const normalizedKeyword = keyword.toLowerCase();
+  const keys = isArray(optionFilterProp)
+    ? optionFilterProp
+    : [optionFilterProp];
+  return keys.some((key) =>
+    toArray(option[key]).join('').toLowerCase().includes(normalizedKeyword),
+  );
+};
+
 export const LightSelect: React.ForwardRefRenderFunction<
   any,
   SelectProps<any> & LightSelectProps
@@ -57,7 +72,7 @@ export const LightSelect: React.ForwardRefRenderFunction<
     onChange,
     value,
     mode,
-    defaultValue,
+    defaultValue: _defaultValue,
     labelVariant,
     size,
     showSearch,
@@ -65,13 +80,11 @@ export const LightSelect: React.ForwardRefRenderFunction<
     style,
     className,
     options,
-    onSearch,
     allowClear,
     labelInValue,
     fieldNames,
     lightLabel,
     labelTrigger,
-    optionFilterProp,
     optionLabelProp = '',
     valueMaxLength = 41,
     fetchDataOnSearch = false,
@@ -133,9 +146,27 @@ export const LightSelect: React.ForwardRefRenderFunction<
     return open;
   }, [open, restProps]);
 
-  const filterValue = Array.isArray(value)
+  const mergedShowSearch = useMemo((): SelectProps['showSearch'] => {
+    if (!showSearch || isBoolean(showSearch)) {
+      return showSearch;
+    }
+
+    const { onSearch, ...showSearchConfig } = showSearch;
+    return {
+      ...showSearchConfig,
+      onSearch: (keyValue: string) => {
+        if (fetchDataOnSearch && fetchData) {
+          fetchData(keyValue);
+        }
+        onSearch?.(keyValue);
+      },
+    };
+  }, [showSearch, fetchDataOnSearch, fetchData]);
+
+  const filterValue = isArray(value)
     ? value.map((v) => getValueOrLabel(valueMap, v))
     : getValueOrLabel(valueMap, value);
+
   return wrapSSR(
     <div
       className={clsx(
@@ -174,17 +205,7 @@ export const LightSelect: React.ForwardRefRenderFunction<
             setOpen(false);
           }
         }}
-        showSearch={showSearch}
-        onSearch={
-          showSearch
-            ? (keyValue) => {
-                if (fetchDataOnSearch && fetchData) {
-                  fetchData(keyValue);
-                }
-                onSearch?.(keyValue);
-              }
-            : void 0
-        }
+        showSearch={mergedShowSearch}
         style={style}
         popupRender={(menuNode) => {
           return (
@@ -199,7 +220,9 @@ export const LightSelect: React.ForwardRefRenderFunction<
                       if (fetchDataOnSearch && fetchData) {
                         fetchData(e.target.value);
                       }
-                      onSearch?.(e.target.value);
+                      if (isObject(showSearch)) {
+                        showSearch.onSearch?.(e.target.value);
+                      }
                     }}
                     onKeyDown={(e) => {
                       // 避免按下删除键把选项也删除了
@@ -233,14 +256,15 @@ export const LightSelect: React.ForwardRefRenderFunction<
         }}
         prefixCls={customizePrefixCls}
         options={
-          onSearch || !keyword
+          (isObject(showSearch) && showSearch.onSearch) || !keyword
             ? options
             : options?.filter((o) => {
-                if (optionFilterProp) {
-                  return toArray(o[optionFilterProp as string])
-                    .join('')
-                    .toLowerCase()
-                    .includes(keyword);
+                if (isObject(showSearch) && showSearch?.optionFilterProp) {
+                  return optionMatchesFilterProp(
+                    o,
+                    showSearch.optionFilterProp,
+                    keyword,
+                  );
                 }
                 return (
                   String(o[labelPropsName])
