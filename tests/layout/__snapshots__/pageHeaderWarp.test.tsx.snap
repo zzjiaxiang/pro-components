@@ -4,6 +4,7 @@ exports[`BasicLayout > base use 1`] = `
 <div>
   <div
     class="ant-design-pro ant-pro-layout screen-lg ant-pro-layout-fix-siderbar ant-pro-layout-side"
+    data-testid="pro-layout"
   >
     <div
       class="ant-pro-layout-bg-list"
@@ -13,11 +14,12 @@ exports[`BasicLayout > base use 1`] = `
       style="min-height: 100%; flex-direction: row;"
     >
       <div
-        style="width: 256px; overflow: hidden; max-width: 256px; min-width: 256px; transition: all 0.2s ease 0s; flex-grow: 0; flex-shrink: 0; flex-basis: 256px;"
+        style="--pro-layout-sider-bg: #f7f8f9; --pro-layout-sider-color-text: var(--ant-color-text-secondary); --pro-layout-sider-color-text-title: var(--ant-color-text); --pro-layout-sider-color-text-secondary: var(--ant-color-text-tertiary); --pro-layout-sider-padding-inline-menu: 8px; --pro-layout-sider-padding-block-menu: 12px; --pro-layout-sider-border-radius: var(--ant-border-radius); --pro-layout-sider-color-bg-hover: var(--ant-color-fill-secondary); --pro-layout-sider-font-size: var(--ant-font-size); width: 240px; overflow: hidden; max-width: 240px; min-width: 240px; transition: all 0.2s ease 0s; flex-grow: 0; flex-shrink: 0; flex-basis: 240px;"
       />
       <aside
-        class="ant-layout-sider ant-layout-sider-dark ant-pro-sider ant-pro-sider-fixed ant-pro-sider-layout-side ant-pro-sider-light css-var-r3"
-        style="max-width: 256px; min-width: 256px; width: 256px; flex-grow: 0; flex-shrink: 0; flex-basis: 256px;"
+        class="ant-layout-sider ant-layout-sider-light ant-pro-sider ant-pro-sider-fixed ant-pro-sider-layout-side ant-pro-sider-light css-var-r3"
+        data-testid="pro-layout-sider"
+        style="--pro-layout-sider-bg: #f7f8f9; --pro-layout-sider-color-text: var(--ant-color-text-secondary); --pro-layout-sider-color-text-title: var(--ant-color-text); --pro-layout-sider-color-text-secondary: var(--ant-color-text-tertiary); --pro-layout-sider-padding-inline-menu: 8px; --pro-layout-sider-padding-block-menu: 12px; --pro-layout-sider-border-radius: var(--ant-border-radius); --pro-layout-sider-color-bg-hover: var(--ant-color-fill-secondary); --pro-layout-sider-font-size: var(--ant-font-size); max-width: 240px; min-width: 240px; width: 240px; flex-grow: 0; flex-shrink: 0; flex-basis: 240px;"
       >
         <div
           class="ant-layout-sider-children"
@@ -161,90 +163,64 @@ exports[`BasicLayout > base use 1`] = `
           <div
             style="overflow-y: auto; overflow-x: hidden; flex-grow: 1; flex-shrink: 1; flex-basis: 0%;"
           >
-            <ul
-              class="ant-menu ant-menu-root ant-menu-inline ant-menu-light ant-pro-sider-menu ant-pro-base-menu-inline css-var-r3 ant-menu-css-var"
-              data-menu-list="true"
+            <nav
+              class="ant-pro-sider-menu ant-pro-base-menu-vertical ant-pro-sider-menu ant-pro-base-menu-vertical ant-pro-base-menu-vertical-list ant-pro-base-menu-vertical-list--root"
+              data-pro-layout-nav-root="true"
               role="menu"
               style="background-color: transparent; border: none none; width: 100%;"
-              tabindex="0"
             >
               <li
-                class="ant-menu-submenu ant-menu-submenu-inline ant-pro-base-menu-inline-submenu ant-menu-submenu-open ant-menu-submenu-selected"
+                class="ant-pro-base-menu-vertical-submenu ant-pro-base-menu-vertical-submenu ant-pro-base-menu-vertical-submenu-open"
+                data-pro-layout-nav-submenu="true"
+                data-pro-layout-nav-submenu-open="true"
                 role="none"
               >
-                <div
-                  aria-controls="rc-menu-uuid-/564f79ec010d02670f2cd38274f84017d6ddf17759857629a1399aed6bb20925-popup"
+                <button
                   aria-expanded="true"
                   aria-haspopup="true"
-                  class="ant-menu-submenu-title"
-                  data-menu-id="rc-menu-uuid-/564f79ec010d02670f2cd38274f84017d6ddf17759857629a1399aed6bb20925"
-                  role="menuitem"
-                  style="padding-left: 16px;"
-                  tabindex="-1"
+                  class="ant-pro-base-menu-vertical-submenu-title ant-pro-base-menu-vertical-submenu-title--open"
+                  type="button"
                 >
-                  <span
-                    class="ant-menu-title-content"
+                  <div
+                    class="ant-pro-base-menu-vertical-item-title"
                   >
-                    <div
-                      class="ant-pro-base-menu-inline-item-title"
+                    <span
+                      class="ant-pro-base-menu-vertical-item-text"
                     >
-                      <span
-                        class="ant-pro-base-menu-inline-item-text"
-                      >
-                        welcome
-                      </span>
-                    </div>
-                  </span>
-                  <i
-                    class="ant-menu-submenu-arrow"
-                  />
-                </div>
+                      welcome
+                    </span>
+                  </div>
+                </button>
                 <ul
-                  class="ant-menu ant-menu-sub ant-menu-inline ant-motion-collapse-enter ant-motion-collapse-enter-start ant-motion-collapse"
-                  data-menu-list="true"
-                  id="rc-menu-uuid-/564f79ec010d02670f2cd38274f84017d6ddf17759857629a1399aed6bb20925-popup"
+                  class="ant-pro-base-menu-vertical-list ant-pro-base-menu-vertical-submenu-children"
                   role="menu"
-                  style="height: 0px; opacity: 0;"
                 >
                   <li
-                    class="ant-menu-submenu ant-menu-submenu-inline ant-pro-base-menu-inline-submenu"
+                    class="ant-pro-base-menu-vertical-submenu ant-pro-base-menu-vertical-submenu"
+                    data-pro-layout-nav-submenu="true"
                     role="none"
                   >
-                    <div
-                      aria-controls="rc-menu-uuid-/welcome-popup"
+                    <button
                       aria-expanded="false"
                       aria-haspopup="true"
-                      class="ant-menu-submenu-title"
-                      data-menu-id="rc-menu-uuid-/welcome"
-                      role="menuitem"
-                      style="padding-left: 32px;"
-                      tabindex="-1"
+                      class="ant-pro-base-menu-vertical-submenu-title"
+                      style="padding-inline-start: 16px;"
+                      type="button"
                     >
-                      <span
-                        class="ant-menu-title-content"
+                      <div
+                        class="ant-pro-base-menu-vertical-item-title"
                       >
-                        <div
-                          class="ant-pro-base-menu-inline-item-title"
+                        <span
+                          class="ant-pro-base-menu-vertical-item-text"
                         >
-                          <span
-                            class="ant-pro-base-menu-inline-item-text"
-                          >
-                            one
-                          </span>
-                        </div>
-                      </span>
-                      <i
-                        class="ant-menu-submenu-arrow"
-                      />
-                    </div>
+                          one
+                        </span>
+                      </div>
+                    </button>
                   </li>
                 </ul>
               </li>
-            </ul>
-            <div
-              aria-hidden="true"
-              style="display: none;"
-            />
+            </nav>
           </div>
           <div
             class="ant-pro-sider-collapsed-button"
@@ -269,12 +245,15 @@ exports[`BasicLayout > base use 1`] = `
       >
         <main
           class="ant-layout-content ant-pro-layout-content ant-pro-layout-has-header ant-pro-layout-content-has-page-container"
+          data-testid="pro-layout-content"
         >
           <div
             class="ant-pro-page-container"
+            data-testid="pro-page-container"
           >
             <div
               class="ant-page-header ant-pro-page-container-warp-page-header ant-page-header-ghost"
+              data-testid="pro-page-header"
             >
               <div
                 class="ant-page-header-heading"
@@ -303,20 +282,22 @@ exports[`BasicLayout > content is text 1`] = `
 <div>
   <div
     class="ant-design-pro ant-pro-layout screen-lg ant-pro-layout-fix-siderbar ant-pro-layout-side"
+    data-testid="pro-layout"
   >
     <div
       class="ant-pro-layout-bg-list"
     />
     <div
-      class="ant-layout ant-layout-has-sider css-var-r9"
+      class="ant-layout ant-layout-has-sider css-var-r7"
       style="min-height: 100%; flex-direction: row;"
     >
       <div
-        style="width: 256px; overflow: hidden; max-width: 256px; min-width: 256px; transition: all 0.2s ease 0s; flex-grow: 0; flex-shrink: 0; flex-basis: 256px;"
+        style="--pro-layout-sider-bg: #f7f8f9; --pro-layout-sider-color-text: var(--ant-color-text-secondary); --pro-layout-sider-color-text-title: var(--ant-color-text); --pro-layout-sider-color-text-secondary: var(--ant-color-text-tertiary); --pro-layout-sider-padding-inline-menu: 8px; --pro-layout-sider-padding-block-menu: 12px; --pro-layout-sider-border-radius: var(--ant-border-radius); --pro-layout-sider-color-bg-hover: var(--ant-color-fill-secondary); --pro-layout-sider-font-size: var(--ant-font-size); width: 240px; overflow: hidden; max-width: 240px; min-width: 240px; transition: all 0.2s ease 0s; flex-grow: 0; flex-shrink: 0; flex-basis: 240px;"
       />
       <aside
-        class="ant-layout-sider ant-layout-sider-dark ant-pro-sider ant-pro-sider-fixed ant-pro-sider-layout-side ant-pro-sider-light css-var-ra"
-        style="max-width: 256px; min-width: 256px; width: 256px; flex-grow: 0; flex-shrink: 0; flex-basis: 256px;"
+        class="ant-layout-sider ant-layout-sider-light ant-pro-sider ant-pro-sider-fixed ant-pro-sider-layout-side ant-pro-sider-light css-var-r8"
+        data-testid="pro-layout-sider"
+        style="--pro-layout-sider-bg: #f7f8f9; --pro-layout-sider-color-text: var(--ant-color-text-secondary); --pro-layout-sider-color-text-title: var(--ant-color-text); --pro-layout-sider-color-text-secondary: var(--ant-color-text-tertiary); --pro-layout-sider-padding-inline-menu: 8px; --pro-layout-sider-padding-block-menu: 12px; --pro-layout-sider-border-radius: var(--ant-border-radius); --pro-layout-sider-color-bg-hover: var(--ant-color-fill-secondary); --pro-layout-sider-font-size: var(--ant-font-size); max-width: 240px; min-width: 240px; width: 240px; flex-grow: 0; flex-shrink: 0; flex-basis: 240px;"
       >
         <div
           class="ant-layout-sider-children"
@@ -460,90 +441,64 @@ exports[`BasicLayout > content is text 1`] = `
           <div
             style="overflow-y: auto; overflow-x: hidden; flex-grow: 1; flex-shrink: 1; flex-basis: 0%;"
           >
-            <ul
-              class="ant-menu ant-menu-root ant-menu-inline ant-menu-light ant-pro-sider-menu ant-pro-base-menu-inline css-var-ra ant-menu-css-var"
-              data-menu-list="true"
+            <nav
+              class="ant-pro-sider-menu ant-pro-base-menu-vertical ant-pro-sider-menu ant-pro-base-menu-vertical ant-pro-base-menu-vertical-list ant-pro-base-menu-vertical-list--root"
+              data-pro-layout-nav-root="true"
               role="menu"
               style="background-color: transparent; border: none none; width: 100%;"
-              tabindex="0"
             >
               <li
-                class="ant-menu-submenu ant-menu-submenu-inline ant-pro-base-menu-inline-submenu ant-menu-submenu-open ant-menu-submenu-selected"
+                class="ant-pro-base-menu-vertical-submenu ant-pro-base-menu-vertical-submenu ant-pro-base-menu-vertical-submenu-open"
+                data-pro-layout-nav-submenu="true"
+                data-pro-layout-nav-submenu-open="true"
                 role="none"
               >
-                <div
-                  aria-controls="rc-menu-uuid-/564f79ec010d02670f2cd38274f84017d6ddf17759857629a1399aed6bb20925-popup"
+                <button
                   aria-expanded="true"
                   aria-haspopup="true"
-                  class="ant-menu-submenu-title"
-                  data-menu-id="rc-menu-uuid-/564f79ec010d02670f2cd38274f84017d6ddf17759857629a1399aed6bb20925"
-                  role="menuitem"
-                  style="padding-left: 16px;"
-                  tabindex="-1"
+                  class="ant-pro-base-menu-vertical-submenu-title ant-pro-base-menu-vertical-submenu-title--open"
+                  type="button"
                 >
-                  <span
-                    class="ant-menu-title-content"
+                  <div
+                    class="ant-pro-base-menu-vertical-item-title"
                   >
-                    <div
-                      class="ant-pro-base-menu-inline-item-title"
+                    <span
+                      class="ant-pro-base-menu-vertical-item-text"
                     >
-                      <span
-                        class="ant-pro-base-menu-inline-item-text"
-                      >
-                        welcome
-                      </span>
-                    </div>
-                  </span>
-                  <i
-                    class="ant-menu-submenu-arrow"
-                  />
-                </div>
+                      welcome
+                    </span>
+                  </div>
+                </button>
                 <ul
-                  class="ant-menu ant-menu-sub ant-menu-inline ant-motion-collapse-enter ant-motion-collapse-enter-start ant-motion-collapse"
-                  data-menu-list="true"
-                  id="rc-menu-uuid-/564f79ec010d02670f2cd38274f84017d6ddf17759857629a1399aed6bb20925-popup"
+                  class="ant-pro-base-menu-vertical-list ant-pro-base-menu-vertical-submenu-children"
                   role="menu"
-                  style="height: 0px; opacity: 0;"
                 >
                   <li
-                    class="ant-menu-submenu ant-menu-submenu-inline ant-pro-base-menu-inline-submenu"
+                    class="ant-pro-base-menu-vertical-submenu ant-pro-base-menu-vertical-submenu"
+                    data-pro-layout-nav-submenu="true"
                     role="none"
                   >
-                    <div
-                      aria-controls="rc-menu-uuid-/welcome-popup"
+                    <button
                       aria-expanded="false"
                       aria-haspopup="true"
-                      class="ant-menu-submenu-title"
-                      data-menu-id="rc-menu-uuid-/welcome"
-                      role="menuitem"
-                      style="padding-left: 32px;"
-                      tabindex="-1"
+                      class="ant-pro-base-menu-vertical-submenu-title"
+                      style="padding-inline-start: 16px;"
+                      type="button"
                     >
-                      <span
-                        class="ant-menu-title-content"
+                      <div
+                        class="ant-pro-base-menu-vertical-item-title"
                       >
-                        <div
-                          class="ant-pro-base-menu-inline-item-title"
+                        <span
+                          class="ant-pro-base-menu-vertical-item-text"
                         >
-                          <span
-                            class="ant-pro-base-menu-inline-item-text"
-                          >
-                            one
-                          </span>
-                        </div>
-                      </span>
-                      <i
-                        class="ant-menu-submenu-arrow"
-                      />
-                    </div>
+                          one
+                        </span>
+                      </div>
+                    </button>
                   </li>
                 </ul>
               </li>
-            </ul>
-            <div
-              aria-hidden="true"
-              style="display: none;"
-            />
+            </nav>
           </div>
           <div
             class="ant-pro-sider-collapsed-button"
@@ -568,12 +523,15 @@ exports[`BasicLayout > content is text 1`] = `
       >
         <main
           class="ant-layout-content ant-pro-layout-content ant-pro-layout-has-header ant-pro-layout-content-has-page-container"
+          data-testid="pro-layout-content"
         >
           <div
             class="ant-pro-page-container"
+            data-testid="pro-page-container"
           >
             <div
               class="ant-page-header ant-pro-page-container-warp-page-header ant-page-header-ghost"
+              data-testid="pro-page-header"
             >
               <div
                 class="ant-page-header-heading"

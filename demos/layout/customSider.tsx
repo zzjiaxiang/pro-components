@@ -8,7 +8,6 @@ import {
   PageContainer,
   ProCard,
   ProLayout,
-  SettingDrawer,
 } from '@ant-design/pro-components';
 import { Avatar, Image, Space } from 'antd';
 import { useState } from 'react';
@@ -99,10 +98,7 @@ const Demo = () => {
             </div>,
           ];
         }}
-        menuRender={(props, defaultDom) => {
-          console.log('defaultDom', defaultDom);
-          return defaultDom;
-        }}
+        menuRender={(_, defaultDom) => defaultDom}
         menuItemRender={(item, dom) => (
           <div
             onClick={() => {
@@ -125,16 +121,6 @@ const Demo = () => {
           </ProCard>
         </PageContainer>
       </ProLayout>
-      <SettingDrawer
-        pathname={pathname}
-        enableDarkTheme
-        getContainer={() => document.getElementById('test-pro-layout')}
-        settings={settings}
-        onSettingChange={(changeSetting) => {
-          setSetting(changeSetting);
-        }}
-        disableUrlParams={false}
-      />
     </div>
   );
 };

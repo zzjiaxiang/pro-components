@@ -1,6 +1,7 @@
 ﻿import { Keyframes } from '@ant-design/cssinjs';
 import type { GenerateStyle, ProAliasToken } from '../../../../provider';
 import { useStyle as useAntdStyle } from '../../../../provider';
+import { proLayoutSiderVar } from './menu';
 export interface SiderMenuToken extends ProAliasToken {
   componentCls: string;
   proLayoutCollapsedWidth: number;
@@ -18,49 +19,53 @@ export const proLayoutTitleHide = new Keyframes('antBadgeLoadingCircle', {
 }) as any;
 
 const genSiderMenuStyle: GenerateStyle<SiderMenuToken> = (token) => {
+  const sv = (k: keyof typeof proLayoutSiderVar) =>
+    `var(${proLayoutSiderVar[k]})`;
   return {
     [`${token.proComponentsCls}-layout`]: {
       [`${token.antCls}-layout-sider${token.componentCls}`]: {
-        background: token.layout?.sider?.colorMenuBackground || 'transparent',
+        background: sv('bg'),
       },
+      /** antd Sider 收起：收紧内边距，内容区水平居中 */
+      [`${token.antCls}-layout-sider${token.componentCls}${token.antCls}-layout-sider-collapsed`]:
+        {
+          [`& ${token.antCls}-layout-sider-children`]: {
+            paddingInline: 4,
+            alignItems: 'center',
+          },
+        },
       [token.componentCls]: {
         position: 'relative',
         boxSizing: 'border-box',
         '&-menu': {
           position: 'relative',
           zIndex: 10,
-          minHeight: '100%',
+          flex: 1,
+          minHeight: 0,
+          overflowY: 'auto',
         },
         [`& ${token.antCls}-layout-sider-children`]: {
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          paddingInline: token.layout?.sider?.paddingInlineLayoutMenu,
-          paddingBlock: token.layout?.sider?.paddingBlockLayoutMenu,
-          borderInlineEnd: `1px solid ${token.colorSplit}`,
-          marginInlineEnd: -1,
-        },
-        [`${token.antCls}-menu`]: {
-          [`${token.antCls}-menu-item-group-title`]: {
-            fontSize: token.fontSizeSM,
-            paddingBottom: 4,
-          },
-          [`${token.antCls}-menu-item:not(${token.antCls}-menu-item-selected):hover`]:
-            {
-              color: token.layout?.sider?.colorTextMenuItemHover,
-            },
+          gap: 12,
+          paddingInline: sv('paddingInlineMenu'),
+          paddingBlock: sv('paddingBlockMenu'),
+          borderInlineEnd: 'none',
+          marginInlineEnd: 0,
         },
         '&-logo': {
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          paddingInline: 12,
-          paddingBlock: 16,
-          color: token.layout?.sider?.colorTextMenu,
+          paddingInline: 8,
+          paddingBlock: 8,
+          minHeight: 42,
+          color: sv('colorText'),
           cursor: 'pointer',
-          borderBlockEnd: `1px solid ${token.layout?.sider?.colorMenuItemDivider}`,
+          borderBlockEnd: 'none',
           '> a': {
             display: 'flex',
             alignItems: 'center',
@@ -78,7 +83,7 @@ const genSiderMenuStyle: GenerateStyle<SiderMenuToken> = (token) => {
               marginBlock: 0,
               marginInlineEnd: 0,
               marginInlineStart: 6,
-              color: token.layout?.sider?.colorTextMenuTitle,
+              color: sv('colorTextTitle'),
               animationName: proLayoutTitleHide,
               animationDuration: '.4s',
               animationTimingFunction: 'ease',
@@ -105,7 +110,7 @@ const genSiderMenuStyle: GenerateStyle<SiderMenuToken> = (token) => {
           justifyContent: 'space-between',
           marginBlock: 4,
           marginInline: 0,
-          color: token.layout?.sider?.colorTextMenu,
+          color: sv('colorText'),
           '&-collapsed': {
             flexDirection: 'column-reverse',
             paddingBlock: 0,
@@ -114,7 +119,7 @@ const genSiderMenuStyle: GenerateStyle<SiderMenuToken> = (token) => {
             transition: 'font-size 0.3s ease-in-out',
           },
           '&-list': {
-            color: token.layout?.sider?.colorTextMenuSecondary,
+            color: sv('colorTextSecondary'),
             '&-collapsed': {
               marginBlockEnd: 8,
               animationName: 'none',
@@ -125,9 +130,9 @@ const genSiderMenuStyle: GenerateStyle<SiderMenuToken> = (token) => {
               lineHeight: '16px',
               fontSize: 16,
               cursor: 'pointer',
-              borderRadius: token.borderRadius,
+              borderRadius: sv('borderRadius'),
               '&:hover': {
-                background: token.colorBgTextHover,
+                background: sv('colorBgHover'),
               },
             },
           },
@@ -137,13 +142,13 @@ const genSiderMenuStyle: GenerateStyle<SiderMenuToken> = (token) => {
             paddingBlock: 8,
             display: 'flex',
             alignItems: 'center',
-            gap: token.marginXS,
-            borderRadius: token.borderRadius,
+            gap: 'var(--ant-margin-xs, 8px)',
+            borderRadius: sv('borderRadius'),
             '& *': {
               cursor: 'pointer',
             },
             '&:hover': {
-              background: token.colorBgTextHover,
+              background: sv('colorBgHover'),
             },
           },
         },
@@ -172,9 +177,9 @@ const genSiderMenuStyle: GenerateStyle<SiderMenuToken> = (token) => {
           background: 'transparent',
         },
         '&-footer': {
-          color: token.layout?.sider?.colorTextMenuSecondary,
+          color: sv('colorTextSecondary'),
           paddingBlockEnd: 16,
-          fontSize: token.fontSize,
+          fontSize: sv('fontSize'),
           animationName: proLayoutTitleHide,
           animationDuration: '.4s',
           animationTimingFunction: 'ease',
@@ -187,12 +192,8 @@ const genSiderMenuStyle: GenerateStyle<SiderMenuToken> = (token) => {
         zIndex: '100',
         height: '100%',
         '&-mix': {
-          height: `calc(100% - ${
-            token.layout?.header?.heightLayoutHeader || 56
-          }px)`,
-          insetBlockStart: `${
-            token.layout?.header?.heightLayoutHeader || 56
-          }px`,
+          height: 'calc(100% - 56px)',
+          insetBlockStart: '56px',
         },
       },
     },

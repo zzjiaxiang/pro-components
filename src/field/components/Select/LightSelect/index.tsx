@@ -6,7 +6,7 @@ import { clsx } from 'clsx';
 import { isArray, isBoolean, isObject } from 'lodash-es';
 import React, { useContext, useMemo, useState } from 'react';
 import { FieldLabel, useStyle } from '../../../../utils';
-import type { ProFieldLightProps } from '../../../PureProField';
+import type { ProFieldLightProps } from '../../../types';
 
 export type LightSelectProps = {
   label?: string;

@@ -3,7 +3,12 @@ import {
   InfoCircleFilled,
   QuestionCircleFilled,
 } from '@ant-design/icons';
-import { LoginForm, ProFormText, ProLayout } from '@ant-design/pro-components';
+import {
+  LoginForm,
+  ProFormText,
+  ProLayout,
+  type ProLayoutNavMenuDomProps,
+} from '@ant-design/pro-components';
 import {
   act,
   cleanup,
@@ -83,13 +88,32 @@ describe('BasicLayout', () => {
 
     await waitForWaitTime(100);
 
-    const titleContent = wrapper.baseElement.querySelector<HTMLElement>(
-      '.ant-pro-base-menu-inline .ant-menu-title-content',
+    const titleRow = wrapper.baseElement.querySelector<HTMLElement>(
+      '.ant-pro-base-menu-vertical-item .ant-pro-base-menu-vertical-item-title',
     );
 
-    expect(titleContent).toBeTruthy();
-    expect(getComputedStyle(titleContent!).width).toBe('100%');
+    expect(titleRow).toBeTruthy();
+    expect(getComputedStyle(titleRow!).width).toBe('100%');
 
+    wrapper.unmount();
+  });
+
+  it('🥩 TopNavHeader merges menuProps once on root nav', async () => {
+    const wrapper = render(
+      <ProLayout
+        layout="top"
+        menuDataRender={() => [{ path: '/welcome', name: '欢迎' }]}
+        menuProps={
+          { 'data-testid': 'top-nav-menu-root' } as ProLayoutNavMenuDomProps
+        }
+      />,
+    );
+    await waitForWaitTime(100);
+    const roots = wrapper.baseElement.querySelectorAll(
+      '[data-testid="top-nav-menu-root"]',
+    );
+    expect(roots.length).toBe(1);
+    expect(roots[0]?.tagName.toLowerCase()).toBe('nav');
     wrapper.unmount();
   });
 
@@ -381,6 +405,7 @@ describe('BasicLayout', () => {
     const wrapper = render(
       <ProLayout
         collapsed
+        menu={{ type: 'group' }}
         menuDataRender={() => [
           {
             path: '/welcome',
@@ -423,12 +448,13 @@ describe('BasicLayout', () => {
       </ProLayout>,
     );
 
-    // 等待组件完全渲染
+    // 收起态：`menu.type === 'group'` 时仍有分组标题节点，应用 CSS 隐藏
     await waitFor(() => {
-      expect(
-        wrapper.baseElement.querySelectorAll('.ant-menu-item-group-title')
-          .length,
-      ).toBeGreaterThanOrEqual(0);
+      const title = wrapper.baseElement.querySelector<HTMLElement>(
+        '[data-pro-layout-nav-group-title]',
+      );
+      expect(title).toBeTruthy();
+      expect(getComputedStyle(title!).display).toBe('none');
     });
 
     // collapsed 的时候action 将会消失
@@ -438,6 +464,54 @@ describe('BasicLayout', () => {
     ).toBe(1);
 
     wrapper.unmount();
+  });
+
+  it('🥩 collapsed vertical: nested submenu (third level) renders inside popup', async () => {
+    const html = render(
+      <ProLayout
+        collapsed
+        location={{ pathname: '/a/b/c' }}
+        menuDataRender={() => [
+          {
+            path: '/a',
+            name: '一级',
+            children: [
+              {
+                path: '/a/b',
+                name: '二级',
+                children: [{ path: '/a/b/c', name: '三级页面' }],
+              },
+            ],
+          },
+        ]}
+      >
+        <div />
+      </ProLayout>,
+    );
+
+    await waitFor(() => {
+      expect(
+        html.baseElement.querySelectorAll('.ant-pro-base-menu-vertical-submenu')
+          .length,
+      ).toBeGreaterThanOrEqual(1);
+    });
+
+    const topSubmenuTitle = await html.findByText('一级');
+    act(() => {
+      topSubmenuTitle.click();
+    });
+
+    await waitFor(() => {
+      const popup = document.body.querySelector(
+        '[class*="ant-pro-base-menu-vertical-submenu-popup"]',
+      );
+      expect(popup).toBeTruthy();
+      expect(popup!.textContent).toContain('二级');
+      /** 路由已匹配三级时 openKeys 含祖先，二级默认展开，浮层内应直接出现三级叶子（勿再点二级，否则会 toggle 收起） */
+      expect(popup!.textContent).toContain('三级页面');
+    });
+
+    html.unmount();
   });
 
   it('🥩 do not render footer', async () => {
@@ -515,7 +589,7 @@ describe('BasicLayout', () => {
     await waitForWaitTime(100);
     expect(
       wrapper.baseElement.querySelector<HTMLDivElement>(
-        'ul.ant-pro-sider-menu',
+        'nav.ant-pro-sider-menu',
       ),
     ).toBeFalsy();
     act(() => {
@@ -546,7 +620,7 @@ describe('BasicLayout', () => {
 
     expect(
       wrapper.baseElement.querySelector<HTMLDivElement>(
-        'ul.ant-pro-sider-menu',
+        'nav.ant-pro-sider-menu',
       ),
     ).toBeTruthy();
     wrapper.unmount();
@@ -653,7 +727,7 @@ describe('BasicLayout', () => {
       getComputedStyle(
         wrapper.baseElement.querySelector<HTMLDivElement>('.ant-pro-sider')!,
       )?.width,
-    ).toBe('256px');
+    ).toBe('240px');
 
     await waitForWaitTime(100);
     wrapper.unmount();
@@ -1049,7 +1123,6 @@ describe('BasicLayout', () => {
             name: '搜索',
             exact: true,
             layout: 'mix',
-            navTheme: 'light',
           },
           {
             path: '/home',
@@ -1091,7 +1164,6 @@ describe('BasicLayout', () => {
               name: '搜索',
               exact: true,
               layout: 'mix',
-              navTheme: 'light',
             },
             {
               path: '/home',
@@ -1135,7 +1207,9 @@ describe('BasicLayout', () => {
     await wrapper.findAllByText('列表页');
     // 欢迎不存在
     expect(
-      wrapper.baseElement.querySelector<HTMLDivElement>('li.ant-menu-item')
+      wrapper.baseElement.querySelector<HTMLDivElement>(
+        'li.ant-pro-base-menu-vertical-item',
+      )
         ?.innerText,
     ).not.toContain('欢迎');
   });
@@ -1331,7 +1405,7 @@ describe('BasicLayout', () => {
     const html = render(<Demo />);
     await waitForWaitTime(100);
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu]').length,
     ).toBe(2);
     const domParentMenu = await (await html.findAllByText('列表页')).at(0);
     act(() => {
@@ -1339,7 +1413,7 @@ describe('BasicLayout', () => {
     });
     await waitForWaitTime(2000);
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu-open').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu-open]').length,
     ).toBe(2);
     const domChildMenu = await (await html.findAllByText('二级列表页面')).at(0);
     const domLink = await (await html.findAllByText('AntDesign外链')).at(0);
@@ -1349,7 +1423,7 @@ describe('BasicLayout', () => {
     });
     await waitForWaitTime(2000);
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu]').length,
     ).toBe(2);
   });
 
@@ -1684,10 +1758,10 @@ describe('BasicLayout', () => {
     await waitForWaitTime(100);
 
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu]').length,
     ).toBe(3);
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu-open').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu-open]').length,
     ).toBe(3);
   });
 
@@ -1785,17 +1859,17 @@ describe('BasicLayout', () => {
     await waitForWaitTime(1200);
 
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu]').length,
     ).toBe(3);
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu-open').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu-open]').length,
     ).toBe(3);
     await act(async () => {
       (await html.findByText('月表'))?.parentElement?.click();
     });
     await waitForWaitTime(800);
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu-open').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu-open]').length,
     ).toBe(0);
   });
 
@@ -1894,7 +1968,7 @@ describe('BasicLayout', () => {
     await waitForWaitTime(1000);
 
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu-open').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu-open]').length,
     ).toBe(2);
 
     act(() => {
@@ -1908,7 +1982,7 @@ describe('BasicLayout', () => {
     await waitForWaitTime(1000);
 
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu-open').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu-open]').length,
     ).toBe(0);
 
     act(() => {
@@ -1923,7 +1997,7 @@ describe('BasicLayout', () => {
 
     expect(onCollapse).toHaveBeenCalledTimes(2);
     expect(
-      html.baseElement.querySelectorAll('li.ant-menu-submenu-open').length,
+      html.baseElement.querySelectorAll('[data-pro-layout-nav-submenu-open]').length,
     ).toBe(2);
   });
 

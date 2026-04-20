@@ -86,7 +86,6 @@ ProLayout will automatically select the menu based on `location.pathname` and au
 | fixSiderbar                | whether to fix the navigation                                                                                                                                                                                                               | `boolean`                                                                                                                                      | `false`                                  |
 | breakpoint                 | Trigger [breakpoint](https://ant.design/components/grid/#Col) for responsive layouts                                                                                                                                                        | `Enum { 'xs', 'sm', 'md', 'lg', 'xl', 'xxl' }`                                                                                                 | `lg`                                     |
 | menu                       | About [menu](#menu) configuration, temporarily only locale, locale can close the menu's own globalization                                                                                                                                   | [`menuConfig`](#menu)                                                                                                                          | `{ locale: true }`                       |
-| iconfontUrl                | Use the icon configuration of [IconFont](https://ant.design/components/icon/#components-icon-demo-iconfont)                                                                                                                                 | `URL`                                                                                                                                          | -                                        |
 | locale                     | Language settings for the current layout                                                                                                                                                                                                    | `LocaleType` (`'zh-CN'` \| `'zh-TW'` \| `'en-US'` \| `'it-IT'` \| `'ko-KR'`)                                                                   | navigator.language                       |
 | settings                   | settings for layout                                                                                                                                                                                                                         | [`Settings`](#Settings)                                                                                                                        | -                                        |
 | siderWidth                 | width of the side menu                                                                                                                                                                                                                      | `number`                                                                                                                                       | mix mode: 215, other: 256                |
@@ -115,7 +114,7 @@ ProLayout will automatically select the menu based on `location.pathname` and au
 | disableMobile              | disable automatic switching to mobile pages                                                                                                                                                                                                 | `boolean`                                                                                                                                      | `false`                                  |
 | ErrorBoundary              | Error handling component                                                                                                                                                                                                                    | `React.ComponentClass<any, any> \| boolean`                                                                                                    | Built-in ErrorBoundary                   |
 | links                      | Show shortcut actions in the lower right corner of the menu                                                                                                                                                                                 | `ReactNode[]`                                                                                                                                  | -                                        |
-| menuProps                  | The props passed to the antd menu component, see [Navigation Menu](https://ant.design/components/menu/)                                                                                                                                     | `MenuProps`                                                                                                                                    | -                                        |
+| menuProps                  | Merged onto the root `nav` of the built-in navigation (e.g. `className`, `style`, `id`, `aria-label`). Does not forward antd `Menu`                                                                                                           | `ProLayoutNavMenuDomProps`                                                                                                                     | -                                        |
 | waterMarkProps             | Watermark related configuration                                                                                                                                                                                                             | `WatermarkProps`                                                                                                                               | -                                        |
 | formatMessage              | Internationalization method                                                                                                                                                                                                                 | `(message: MessageDescriptor) => string`                                                                                                       | -                                        |
 | siderMenuType              | The type of side menu, shortcut for menu.type                                                                                                                                                                                               | `'sub'` \| `'group'`                                                                                                                           | -                                        |
@@ -140,35 +139,6 @@ menu supports some commonly used menu configurations to help us better manage me
 | loading         | Whether the menu is loading                                                                                                                              | `boolean`                                            | `false` |
 | onLoadingChange | Menu loading state change                                                                                                                                | `(loading)=>void`                                    | -       |
 | request         | Method for remote loading of menus, will automatically modify loading state                                                                              | `(params,defaultMenuDat) => Promise<MenuDataItem[]>` | -       |
-
-### SettingDrawer
-
-| Parameters       | Description                                                                                              | Type                                               | Default |
-| ---------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ------- |
-| collapse         | Control SettingDrawer collapse and expand                                                                | `boolean`                                          | -       |
-| onCollapseChange | SettingDrawer collapse event                                                                             | `(collapsed: boolean) => void`                     | -       |
-| settings         | layout settings                                                                                          | [`Settings`](#Settings) \| [`Settings`](#Settings) | -       |
-| onSettingChange  | [`Settings`](#Settings) A change event occurred                                                          | `(settings: [`Settings`](#Settings)) => void`      | -       |
-| hideHintAlert    | Delete the prompt message below                                                                          | `boolean`                                          | -       |
-| hideCopyButton   | Do not show copy function                                                                                | `boolean`                                          | -       |
-| disableUrlParams | Disable synchronization settings to query parameters                                                     | `boolean`                                          | `false` |
-| enableDarkTheme  | Turn on black theme switching function ｜ `boolean`                                                      | `false`                                            |         |
-| colorList        | Built-in color switching system (ColorList title will be displayed as Tooltip) ｜ `{key,color,title?}[]` | `ColorList`                                        |         |
-
-Built-in color list
-
-```tsx | pure
-const colorList = [
-  { key: 'daybreak', color: '#1890ff' },
-  { key: 'dust', color: '#F5222D' },
-  { key: 'volcano', color: '#FA541C' },
-  { key: 'sunset', color: '#FAAD14' },
-  { key: 'cyan', color: '#13C2C2' },
-  { key: 'green', color: '#52C41A' },
-  { key: 'geekblue', color: '#2F54EB' },
-  { key: 'purple', color: '#722ED1' },
-];
-```
 
 ### PageLoading
 
@@ -243,10 +213,6 @@ export interface Settings {
   menu: { locale: boolean };
   title: string;
   pwa: boolean;
-  // Your custom iconfont Symbol script Url
-  // eg: // at.alicdn.com/t/font_1039637_btcrd5co4w.js
-  // Usage: https://github.com/ant-design/ant-design-pro/pull/3517
-  iconfontUrl: string;
   colorWeak: boolean;
 }
 ```
@@ -261,7 +227,7 @@ export interface MenuDataItem {
   children?: MenuDataItem[];
   hideChildrenInMenu?: boolean;
   hideInMenu?: boolean;
-  icon?: string;
+  icon?: React.ReactNode;
   locale?: string;
   name?: string;
   path: string;
@@ -294,7 +260,6 @@ The default ProLayout does not provide a footer, but does provide a DefaultFoote
 
 ```tsx | pure
 import { GithubOutlined } from '@ant-design/icons';
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DefaultFooter } from '@ant-design/pro-components';
 
 <DefaultFooter
@@ -422,9 +387,7 @@ Sider Token is the color value of the side menu, which is different from the top
 
 ### Customizing Layout
 
-ProLayout provides some api to remove areas that are not needed by the user. Some configurations are also provided in SettingDrawer to set them.
-
-![setting-drawer-render](https://gw.alipayobjects.com/zos/antfincdn/mCXDkK2pJ0/60298863-F5A5-4af2-923A-13EF912DB0E1.png)
+ProLayout provides some api to remove areas that are not needed by the user.
 
 - `headerRender` can customize the top bar
 - `footerRender` can customize the footer
@@ -507,7 +470,7 @@ export interface MenuDataItem {
   children?: MenuDataItem[];
   hideChildrenInMenu?: boolean;
   hideInMenu?: boolean;
-  icon?: string;
+  icon?: React.ReactNode;
   locale?: string;
   name?: string;
   path: string;
@@ -516,7 +479,7 @@ export interface MenuDataItem {
 ```
 
 - name is used to configure the name in the menu, and will be modified to the browser tab title
-- icon represents the body of the menu, only antd's icon, iconfont needs to be defined by yourself
+- icon is the menu icon: `@ant-design/icons`, a custom React node, or an image/SVG URL string
 - locale can set the internationalization of the menu name
 - hideInMenu will be configured to hide this route in the menu, name will have the same effect if not filled
 - hideChildrenInMenu will hide the children of this route in the menu

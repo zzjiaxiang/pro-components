@@ -1,5 +1,43 @@
 # Changelog
 
+## [3.1.3-0] - 2026-04-06
+
+### 🗑 破坏性变更
+
+- ProLayout
+  - 🗑 移除 `iconfontUrl` 与 `@ant-design/icons` 的 `IconFont` 脚本加载；菜单项 `icon` 请使用 React 节点（如 `@ant-design/icons`）、或图片/SVG 的 URL 字符串
+  - 🗑 移除 `navTheme`（`ProSettings` / 路由 `MenuDataItem` 等不再透传）；侧栏 `Sider` 固定为 `theme="light"`，全局暗色请使用 antd `ConfigProvider` 的 `theme.algorithm`
+  - 🗑 移除内置 `SettingDrawer`（不再从 `@ant-design/pro-components` 导出）
+  - 🗑 移除 ProHelp 全家桶（`ProHelp`、`ProHelpPanel`、`ProHelpDrawer`、`ProHelpModal`、`ProHelpPopover`、`ProHelpContentPanel`、`ProHelpProvide` 及 `ProHelpDataSource` 等相关类型不再导出）；需要时请使用历史版本或自行实现
+
+- ProDescriptions
+  - 🗑 移除 `ProDescriptionsItem` 导出；请使用 `columns` 配置列
+  - 🛠 列类型更名为 `ProDescriptionsColumn`（`ProDescriptionsItemProps` 保留为别名）
+  - 🛠 `request` 返回类型收紧为 `ProDescriptionsRequestResult<T>`；`params` 为 `Record<string, unknown>`；`onDataSourceChange` 可收到 `undefined`
+  - 🛠 `ProDescriptionsProps` 不再接受 `items`（由组件内部生成）
+
+### 🐛 问题修复
+
+- 站点文档
+  - 🐞 修正多处 `<code src>` 与 `demos/` 实际文件名不一致（如 `single-test` → `_single-test`、`debug-demo` → `_debug-demo`、`base_test` → `_base-test` 等），并修复 `group.md` 中 `Group//` 双斜杠路径
+
+### 🛠 重构 / 文档
+
+- ProLayout
+  - 💄 主导航间距：行项对称 `padding-inline`；根 `nav` 与子列表不再双 `gap`；分组标题与子列表增加纵向间距；修正收起态选择器为 `nav--collapsed`
+  - 🛠 侧栏主导航 DOM 扁平化：非横向时根 `ul` 合并为 `nav`（少一层）；去掉 `title-content` / `submenu-title-wrap`；弹出层为单层 `ul`；`ant-pro-sider-menu` 仅挂在侧栏 `nav` 上避免重复类名
+  - 💄 主导航样式去重：仅使用 `ant-pro-base-menu-*` 与 `--pro-layout-nav-*`，移除对 `ant-menu-*` 的类名与样式依赖；子菜单增加 `data-pro-layout-nav-submenu` 便于测试与定制
+  - 🐞 无 `menu.request` 时不再误用 SWR 的 `undefined` 覆盖路由菜单；`menu.autoClose === false` 且路由无法匹配（如外链 pathname）时保留已展开项
+  - 💄 侧栏/纵向主导航样式对齐紧凑侧栏：分组纵向 `gap`、分组标题、32px 行高条目、`6px` 圆角与图标区 24px；尺寸与色值通过 `--pro-layout-nav-*` 可调
+  - 🛠 侧栏与顶栏主导航不再使用 antd `Menu`，改为自研 `ProLayoutNavMenu`；`BaseMenu` 的 `menuProps` 改为合并到根 `nav` 的 `ProLayoutNavMenuDomProps`（不再透传 antd `MenuProps`）
+  - 🛠 菜单样式以根节点 `--pro-layout-nav-*` 与 `var(--ant-*)` 为主；`ProLayoutProps` 补充 `selectedKeys`、`openKeys`、`onSelect` 类型声明
+  - 🛠 主导航相关类型集中到 `types.ts` 并自包导出：`MenuMode`、`ProLayoutNavMenuDomProps`、`ProLayoutNavMenuSelectInfo`、`NavMenuNode` 等；`menuItemRender` / `subMenuItemRender` / `menuTextRender` 第三参类型参数更名为 `menuConfig`（与 `menuProps` 区分）
+- ProForm
+  - ✅ 新增 Schema 与命令式路径对齐单测（`schemaImperativeAlignment`）
+  - 📖 内部文档：`docs/internal/form-architecture.md`、`docs/rfc/2026-04-pro-form-architecture-refactor.md`（与当前 `master` 源码路径对齐）
+
+---
+
 ## [3.1.2-0] - 2026-01-27
 
 ### 🐛 问题修复

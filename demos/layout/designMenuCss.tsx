@@ -10,11 +10,11 @@ import {
   PageContainer,
   ProCard,
   ProLayout,
-  SettingDrawer,
 } from '@ant-design/pro-components';
 import { Button, Input } from 'antd';
 import { useState } from 'react';
 import defaultProps from './_defaultProps';
+import { demoOnMenuHeaderClick } from './_demoHandlers';
 
 const Demo = () => {
   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
@@ -152,7 +152,7 @@ const Demo = () => {
             </div>
           );
         }}
-        onMenuHeaderClick={(e) => console.log(e)}
+        onMenuHeaderClick={demoOnMenuHeaderClick}
         menuItemRender={(item, dom) => (
           <a
             onClick={() => {
@@ -189,16 +189,6 @@ const Demo = () => {
           </ProCard>
         </PageContainer>
       </ProLayout>
-      <SettingDrawer
-        pathname={pathname}
-        enableDarkTheme
-        getContainer={() => document.getElementById('test-pro-layout')}
-        settings={settings}
-        onSettingChange={(changeSetting) => {
-          setSetting(changeSetting);
-        }}
-        disableUrlParams={false}
-      />
     </div>
   );
 };

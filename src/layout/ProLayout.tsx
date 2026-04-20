@@ -29,6 +29,7 @@ import { DefaultHeader as Header } from './components/Header';
 import { PageLoading } from './components/PageLoading';
 import { SiderMenu } from './components/SiderMenu';
 import type { SiderMenuProps } from './components/SiderMenu/SiderMenu';
+import type { ProLayoutNavMenuSelectInfo } from './components/SiderMenu/types';
 import type { SiderMenuToken } from './components/SiderMenu/style';
 import { RouteContext } from './context/RouteContext';
 import type { ProSettings } from './defaultSettings';
@@ -75,6 +76,12 @@ type GlobalTypes = Omit<
 >;
 
 export type ProLayoutProps = GlobalTypes & {
+  /** 受控菜单选中项 */
+  selectedKeys?: string[];
+  /** 受控子菜单展开项，`false` 表示非受控 */
+  openKeys?: WithFalse<string[]>;
+  /** 菜单项选中时回调（自研菜单与历史 antd Menu 行为对齐） */
+  onSelect?: (info: ProLayoutNavMenuSelectInfo) => void;
   stylish?: {
     header?: GenerateStyle<SiderMenuToken>;
     sider?: GenerateStyle<SiderMenuToken>;
@@ -407,9 +414,10 @@ const getPaddingInlineStart = (
   hasLeftPadding: boolean,
   collapsed: boolean | undefined,
   siderWidth: number,
+  collapsedWidth: number,
 ): number | undefined => {
   if (hasLeftPadding) {
-    return collapsed ? 64 : siderWidth;
+    return collapsed ? collapsedWidth : siderWidth;
   }
   return 0;
 };
@@ -442,8 +450,10 @@ const BaseProLayout: React.FC<ProLayoutProps> = (props) => {
   const siderWidth = useMemo(() => {
     if (propsSiderWidth) return propsSiderWidth;
     if (props.layout === 'mix') return 215;
-    return 256;
+    return 240;
   }, [props.layout, propsSiderWidth]);
+
+  const menuCollapsedWidth = menu?.collapsedWidth ?? 48;
 
   const context = useContext(ConfigProvider.ConfigContext);
 
@@ -525,19 +535,21 @@ const BaseProLayout: React.FC<ProLayoutProps> = (props) => {
     };
   }, []);
 
+  const routeListForMenu = useMemo(() => {
+    if (menu?.request) {
+      return data ?? route?.children ?? route?.routes ?? [];
+    }
+    return route?.children || route?.routes || [];
+  }, [menu?.request, data, route?.children, route?.routes]);
+
   const menuInfoData = useMemo<{
     breadcrumb?: Record<string, MenuDataItem>;
     breadcrumbMap?: Map<string, MenuDataItem>;
     menuData?: MenuDataItem[];
   }>(
     () =>
-      getMenuData(
-        data || route?.children || route?.routes || [],
-        menu,
-        formatMessage,
-        menuDataRender,
-      ),
-    [formatMessage, menu, menuDataRender, data, route?.children],
+      getMenuData(routeListForMenu, menu, formatMessage, menuDataRender),
+    [formatMessage, menu, menuDataRender, routeListForMenu],
   );
 
   const { breadcrumb, breadcrumbMap, menuData = [] } = menuInfoData || {};
@@ -569,7 +581,6 @@ const BaseProLayout: React.FC<ProLayoutProps> = (props) => {
 
   const {
     fixSiderbar,
-    navTheme,
     layout: propsLayout,
     ...rest
   } = {
@@ -727,6 +738,7 @@ const BaseProLayout: React.FC<ProLayoutProps> = (props) => {
     !!hasLeftPadding,
     collapsed,
     siderWidth,
+    menuCollapsedWidth,
   );
 
   // siderMenuDom 为空的时候，不需要 padding
@@ -813,7 +825,6 @@ const BaseProLayout: React.FC<ProLayoutProps> = (props) => {
           <Layout
             style={{
               minHeight: '100%',
-              // hack style
               flexDirection: siderMenuDom ? 'row' : undefined,
               ...style,
             }}
@@ -824,42 +835,6 @@ const BaseProLayout: React.FC<ProLayoutProps> = (props) => {
                 token: {
                   controlHeightLG:
                     token.layout?.sider?.menuHeight || token?.controlHeightLG,
-                },
-                components: {
-                  Menu: {
-                    itemBg:
-                      token.layout?.sider?.colorMenuBackground || 'transparent',
-                    subMenuItemBg:
-                      token.layout?.sider?.colorMenuBackground || 'transparent',
-                    itemBorderRadius: token.borderRadius,
-                    itemSelectedBg:
-                      token.layout?.sider?.colorBgMenuItemSelected ||
-                      token?.colorBgTextHover,
-                    itemHoverBg:
-                      token.layout?.sider?.colorBgMenuItemHover ||
-                      token?.colorBgTextHover,
-                    itemActiveBg:
-                      token.layout?.sider?.colorBgMenuItemActive ||
-                      token?.colorBgTextActive,
-                    horizontalItemSelectedBg:
-                      token.layout?.sider?.colorBgMenuItemSelected ||
-                      token?.colorBgTextHover,
-                    activeBarWidth: 0,
-                    activeBarHeight: 0,
-                    activeBarBorderWidth: 0,
-                    itemColor:
-                      token.layout?.sider?.colorTextMenu ||
-                      token?.colorTextSecondary,
-                    itemHoverColor:
-                      token.layout?.sider?.colorTextMenuItemHover ||
-                      'rgba(0, 0, 0, 0.85)', // 悬浮态
-                    itemSelectedColor:
-                      token.layout?.sider?.colorTextMenuSelected ||
-                      'rgba(0, 0, 0, 1)',
-                    popupBg: token?.colorBgElevated,
-                    darkSubMenuItemBg: 'transparent',
-                    darkPopupBg: token?.colorBgElevated,
-                  },
                 },
               }}
             >
@@ -903,13 +878,6 @@ const BaseProLayout: React.FC<ProLayoutProps> = (props) => {
 const ProLayout: React.FC<ProLayoutProps> = (props) => {
   const { colorPrimary } = props;
 
-  const darkProps =
-    props.navTheme !== undefined
-      ? {
-          dark: props.navTheme === 'realDark',
-        }
-      : {};
-
   return (
     <ConfigProvider
       theme={
@@ -923,7 +891,6 @@ const ProLayout: React.FC<ProLayoutProps> = (props) => {
       }
     >
       <ProConfigProvider
-        {...darkProps}
         token={props.token}
         prefixCls={props.prefixCls}
       >

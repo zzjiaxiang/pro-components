@@ -1,5 +1,43 @@
 # Changelog
 
+## [3.1.3-0] - 2026-04-06
+
+### 🗑 Breaking Changes
+
+- ProLayout
+  - 🗑 Remove `iconfontUrl` and IconFont script loading; use React nodes for menu `icon` (e.g. `@ant-design/icons`) or image/SVG URL strings
+  - 🗑 Remove `navTheme` (no longer on `ProSettings` or route `MenuDataItem`); sider `Sider` always uses `theme="light"` — use antd `ConfigProvider` `theme.algorithm` for app-wide dark mode
+  - 🗑 Remove built-in `SettingDrawer` (no longer exported from `@ant-design/pro-components`)
+  - 🗑 Remove the entire ProHelp suite (`ProHelp`, `ProHelpPanel`, `ProHelpDrawer`, `ProHelpModal`, `ProHelpPopover`, `ProHelpContentPanel`, `ProHelpProvide`, and related types such as `ProHelpDataSource` are no longer exported); pin an older version or re-implement in app code if needed
+
+- ProDescriptions
+  - 🗑 Remove `ProDescriptionsItem` export; use `columns` instead
+  - 🛠 Rename column type to `ProDescriptionsColumn` (`ProDescriptionsItemProps` remains an alias)
+  - 🛠 Tighten `request` return type to `ProDescriptionsRequestResult<T>`; `params` is `Record<string, unknown>`; `onDataSourceChange` may receive `undefined`
+  - 🛠 `ProDescriptionsProps` no longer accepts `items` (generated internally)
+
+### 🐛 Bug Fixes
+
+- Site docs
+  - 🐞 Fix several `<code src>` paths that did not match files under `demos/` (e.g. `single-test` → `_single-test`, `debug-demo` → `_debug-demo`, `base_test` → `_base-test`) and correct a `Group//` double-slash path in `group.md`
+
+### 🛠 Refactor / Documentation
+
+- ProLayout
+  - 💄 Nav spacing: symmetric row `padding-inline`; remove double `gap` on root `nav` vs list; extra vertical rhythm for group title and nested lists; fix collapsed selector to `nav--collapsed`
+  - 🛠 Flatten sider nav DOM: non-horizontal root drops inner `ul` (merge list classes onto `nav`); remove `title-content` / `submenu-title-wrap`; popup is a single `ul`; `ant-pro-sider-menu` only on sider `nav` to avoid duplicate class tokens
+  - 💄 Deduplicate nav styles: only `ant-pro-base-menu-*` + `--pro-layout-nav-*`; drop `ant-menu-*` class names and CSS coupling; add `data-pro-layout-nav-submenu` on submenu rows for tests/customization
+  - 🐞 Without `menu.request`, do not let SWR `undefined` replace route menu data; when `menu.autoClose === false` and the pathname cannot match (e.g. external URL), keep user-expanded `openKeys`
+  - 💄 Tighten sider / vertical nav layout: stacked groups with gap, section titles, 32px row height, 6px radius, 24px icon box; tune via `--pro-layout-nav-*`
+  - 🛠 Replace antd `Menu` in sider and top navigation with custom `ProLayoutNavMenu`; `BaseMenu` `menuProps` now merges onto root `nav` as `ProLayoutNavMenuDomProps` (no longer forwards antd `MenuProps`)
+  - 🛠 Menu styles use root `--pro-layout-nav-*` and `var(--ant-*)`; add `selectedKeys`, `openKeys`, and `onSelect` to `ProLayoutProps` typings
+  - 🛠 Centralize nav-related types in `types.ts` and export from the package: `MenuMode`, `ProLayoutNavMenuDomProps`, `ProLayoutNavMenuSelectInfo`, `NavMenuNode`, etc.; rename the third callback parameter of `menuItemRender` / `subMenuItemRender` / `menuTextRender` to `menuConfig` (distinct from `menuProps`)
+- ProForm
+  - ✅ Added schema vs imperative alignment tests (`schemaImperativeAlignment`)
+  - 📖 Internal docs: `docs/internal/form-architecture.md`, `docs/rfc/2026-04-pro-form-architecture-refactor.md` (aligned with current `master` source layout)
+
+---
+
 ## [3.1.2-0] - 2026-01-27
 
 ### 🐛 Bug Fixes

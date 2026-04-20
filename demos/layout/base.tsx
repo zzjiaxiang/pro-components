@@ -14,7 +14,6 @@ import {
   ProCard,
   ProConfigProvider,
   ProLayout,
-  SettingDrawer,
 } from '@ant-design/pro-components';
 import { css } from '@emotion/css';
 import {
@@ -28,6 +27,7 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 import defaultProps from './_defaultProps';
+import { demoOnMenuHeaderClick } from './_demoHandlers';
 
 const SOLUTIONS = {
   金融行业: [
@@ -426,7 +426,7 @@ const Demo = () => {
                 </div>
               );
             }}
-            onMenuHeaderClick={(e) => console.log(e)}
+            onMenuHeaderClick={demoOnMenuHeaderClick}
             menuItemRender={(item, dom) => (
               <div
                 role="button"
@@ -480,20 +480,6 @@ const Demo = () => {
                 <div />
               </ProCard>
             </PageContainer>
-
-            <SettingDrawer
-              pathname={pathname}
-              enableDarkTheme
-              getContainer={(e: any) => {
-                if (typeof window === 'undefined') return e;
-                return document.getElementById('test-pro-layout');
-              }}
-              settings={settings}
-              onSettingChange={(changeSetting) => {
-                setSetting(changeSetting);
-              }}
-              disableUrlParams={false}
-            />
           </ProLayout>
         </ConfigProvider>
       </ProConfigProvider>

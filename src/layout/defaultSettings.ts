@@ -10,13 +10,6 @@ export type RenderSetting = {
 };
 export type PureSettings = {
   /**
-   * @name theme for nav menu
-   *
-   * @type  'realDark' | 'light' | undefined
-   */
-  navTheme?: 'realDark' | 'light' | undefined;
-
-  /**
    * @name layout 的布局方式
    * @type  'side' | 'top' | 'mix'
    *
@@ -53,7 +46,8 @@ export type PureSettings = {
      */
     collapsedShowTitle?: boolean;
     /**
-     * 收起时也展示 分组菜单的标题
+     * 历史字段：分组标题在收起时始终保留，本项已不再参与渲染逻辑
+     * @deprecated
      */
     collapsedShowGroupTitle?: boolean;
     /**
@@ -109,11 +103,6 @@ export type PureSettings = {
    * @name Layout 的 title，也会显示在浏览器标签上
    */
   title?: string | false;
-  /**
-   * Your custom iconfont Symbol script Url eg：//at.alicdn.com/t/font_1039637_btcrd5co4w.js
-   * 注意：如果需要图标多色，Iconfont 图标项目里要进行批量去色处理 Usage: https://github.com/ant-design/ant-design-pro/pull/3517
-   */
-  iconfontUrl?: string;
   /** @name 主色，需要配合 umi 使用 */
   colorPrimary?: string;
   /** @name 全局增加滤镜 */
@@ -137,13 +126,14 @@ export type PureSettings = {
 export type ProSettings = PureSettings & RenderSetting;
 
 const defaultSettings: ProSettings = {
-  navTheme: 'light',
   layout: 'side',
   contentWidth: 'Fluid',
   fixedHeader: false,
   fixSiderbar: true,
-  iconfontUrl: '',
   colorPrimary: '#1677FF',
   splitMenus: false,
+  menu: {
+    collapsedWidth: 48,
+  },
 };
 export { defaultSettings };

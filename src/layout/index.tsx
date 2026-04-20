@@ -17,11 +17,19 @@ import {
 import type { PageHeaderProps } from './components/PageHeader';
 import { PageHeader } from './components/PageHeader';
 import { PageLoading } from './components/PageLoading';
+import type { BaseMenuProps } from './components/SiderMenu/BaseMenu';
+import { BaseMenu } from './components/SiderMenu/BaseMenu';
+import type { ProLayoutNavMenuProps } from './components/SiderMenu/ProLayoutNavMenu';
 import type {
-  SettingDrawerProps,
-  SettingDrawerState,
-} from './components/SettingDrawer';
-import { SettingDrawer } from './components/SettingDrawer';
+  MenuMode,
+  NavMenuDividerNode,
+  NavMenuGroupNode,
+  NavMenuLeafNode,
+  NavMenuNode,
+  NavMenuSubmenuNode,
+  ProLayoutNavMenuDomProps,
+  ProLayoutNavMenuSelectInfo,
+} from './components/SiderMenu/types';
 import type { TopNavHeaderProps } from './components/TopNavHeader';
 import { TopNavHeader } from './components/TopNavHeader';
 import type { RouteContextType } from './context/RouteContext';
@@ -32,10 +40,10 @@ import { ProLayout } from './ProLayout';
 import { getMenuData } from './utils/getMenuData';
 
 // WaterMark component has been removed, please use antd Watermark directly
-export * from './components/Help';
 export type { ProSettings, ProSettings as Settings } from './defaultSettings';
 export type { MenuDataItem } from './typing';
 export {
+  BaseMenu,
   DefaultFooter,
   DefaultHeader,
   FooterToolbar,
@@ -49,20 +57,27 @@ export {
   ProLayout,
   ProPageHeader,
   RouteContext,
-  SettingDrawer,
   TopNavHeader,
 };
 export type {
   AppItemProps,
   AppListProps,
+  BaseMenuProps,
   FooterProps,
   HeaderProps,
+  MenuMode,
+  NavMenuDividerNode,
+  NavMenuGroupNode,
+  NavMenuLeafNode,
+  NavMenuNode,
+  NavMenuSubmenuNode,
   PageContainerProps,
   PageHeaderProps,
+  ProLayoutNavMenuDomProps,
+  ProLayoutNavMenuProps,
+  ProLayoutNavMenuSelectInfo,
   ProLayoutProps,
   RouteContextType,
-  SettingDrawerProps,
-  SettingDrawerState,
   TopNavHeaderProps,
 };
 export default ProLayout;

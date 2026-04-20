@@ -264,7 +264,7 @@ Using FormItemRender or ProFormItemRender makes it easier to write form items in
 
 <code src="../../demos/form/linkage-customization.tsx" debug></code>
 
-<code src="../../demos/form/pro-form-dependency.debug.tsx"  debug></code>
+<code src="../../demos/form/_pro-form-dependency.tsx"  debug></code>
 
 <code src="../../demos/form/label-col.tsx" debug></code>
 
@@ -413,17 +413,13 @@ This property is a high-level wrapper made by ProForm based on the original Antd
 
 ```tsx | pure
 import type { ProFormInstance } from '@ant-design/pro-components';
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   ProForm,
   ProFormDatePicker,
   ProFormText,
 } from '@ant-design/pro-components';
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Button, message, Space } from 'antd';
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import moment from 'dayjs';
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useRef } from 'react';
 
 const waitTime = (time: number = 100) => {
@@ -526,6 +522,6 @@ export default () => {
 |    `getFieldFormatValueObject`    |   Usage is the same as `FormInstance`'s `getFieldValue`, returns formatted specified data (including name path)   |         |
 | `validateFieldsReturnFormatValue` | Usage is the same as `FormInstance`'s `validateFields` method, returns all formatted data after validation passes |         |
 
-<code src="../../demos/form/modalform-test.tsx"  debug></code>
+<code src="../../demos/form/_modalform-test.tsx"  debug></code>
 
 <code src="../../demos/form/params-formref.tsx"  debug></code>

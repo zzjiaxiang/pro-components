@@ -1,10 +1,6 @@
 import { LikeOutlined, UserOutlined } from '@ant-design/icons';
 import type { ProSettings } from '@ant-design/pro-components';
-import {
-  PageContainer,
-  ProLayout,
-  SettingDrawer,
-} from '@ant-design/pro-components';
+import { PageContainer, ProLayout } from '@ant-design/pro-components';
 import {
   Button,
   ConfigProvider,
@@ -15,6 +11,7 @@ import {
 } from 'antd';
 import { useState } from 'react';
 import defaultProps from './_defaultProps';
+import { demoOnMenuHeaderClick } from './_demoHandlers';
 
 const content = (
   <Descriptions size="small" column={2}>
@@ -73,7 +70,7 @@ const Demo = () => {
             </a>
           );
         }}
-        onMenuHeaderClick={(e) => console.log(e)}
+        onMenuHeaderClick={demoOnMenuHeaderClick}
         menuItemRender={(item, dom) => (
           <a
             onClick={() => {
@@ -143,11 +140,6 @@ const Demo = () => {
           </div>
         </PageContainer>
       </ProLayout>
-      <SettingDrawer
-        getContainer={() => document.getElementById('test-pro-layout')}
-        settings={settings}
-        onSettingChange={(changeSetting) => setSetting(changeSetting)}
-      />
     </ConfigProvider>
   );
 };
